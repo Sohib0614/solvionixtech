@@ -1,0 +1,1280 @@
+@import 'tailwindcss';
+
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/jetbrains-mono';
+
+@theme {
+  --font-sans:
+    'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
+  --font-display:
+    'Plus Jakarta Sans', 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --color-ink-950: #05060a;
+  --color-ink-900: #080a0f;
+  --color-ink-850: #0b0d13;
+  --color-ink-800: #0e1118;
+  --color-ink-700: #151922;
+  --color-ink-600: #1d222d;
+
+  --color-line: #1f242f;
+  --color-line-soft: #171b24;
+
+  --color-fog-50: #f4f6f8;
+  --color-fog-100: #e4e8ee;
+  --color-fog-200: #c8ced8;
+  --color-fog-300: #b2bac6;
+  --color-fog-400: #98a1ae;
+  --color-fog-500: #7c8593;
+  /* 4.5:1 on --color-ink-950. The faintest tier of the ramp still has to be
+     readable, because it carries the 11px monospace labels. */
+  --color-fog-600: #777e8a;
+
+  /* Single accent colour for the whole site. */
+  --color-signal-200: #bae6fd;
+  --color-signal-300: #7dd3fc;
+  --color-signal-400: #38bdf8;
+  --color-signal-500: #0ea5e9;
+  --color-signal-600: #0284c7;
+
+  /* WhatsApp brand green, used only by the WhatsApp button. */
+  --color-brand-whatsapp: #25d366;
+  --color-brand-whatsapp-dark: #1da851;
+
+  --radius-card: 0.75rem;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Translucent overlays. Declared as tokens rather than written as
+     `bg-white/5` at each call site, because a white overlay is correct on a
+     dark page and invisible on a light one. */
+  --overlay-surface: rgba(255, 255, 255, 0.05);
+  --overlay-hover: rgba(255, 255, 255, 0.06);
+  --overlay-border: rgba(255, 255, 255, 0.15);
+  --on-hero: #f4f6f8;
+
+  /* Scrim behind display type that sits over the 3D scene.
+     The scene behind it is mid-tone and moving, and display type over a moving
+     mid-tone is not readable without one. It is a gradient, not a card: no border,
+     no fill edge. Each theme supplies its own, because a dark scrim behind light
+     type on a light theme would be a visible grey cloud. */
+  --scene-scrim: rgba(5, 6, 10, 0.82);
+
+  /* The accent does two different jobs: as text it has to be legible, as a
+     filled surface it has to carry a legible label. Those need different tones
+     on a light background, and the bright cyan that works on black is only
+     1.98:1 on white. So the roles are named, and each theme supplies its own
+     pair, rather than every call site reaching for a step in the cyan ramp. */
+  --color-accent-text: #7dd3fc;
+  --color-accent-text-hover: #bae6fd;
+  --color-accent-surface: #38bdf8;
+  --color-accent-surface-hover: #7dd3fc;
+  --color-accent-surface-active: #0ea5e9;
+  --color-on-accent: #05060a;
+}
+
+/* ------------------------------------------------------------------ LIGHT ---
+ * A separately designed theme, not an inversion. Surfaces climb towards white,
+ * text descends to near-black, and the accent darkens to hold contrast on a
+ * light background: #38bdf8 on #ffffff is roughly 2.4:1, which is fine for a
+ * glow and unreadable as text, so text-weight accent moves to #0369a1 (~5.9:1).
+ *
+ * Because every utility in the site compiles to `var(--color-*)`, re-declaring
+ * the same names under this one selector retheme the whole site.
+ * -------------------------------------------------------------------------- */
+:root[data-theme='light'] {
+  --color-ink-950: #f5f6f8;
+  --color-ink-900: #ffffff;
+  --color-ink-850: #fafbfc;
+  --color-ink-800: #eef1f5;
+  --color-ink-700: #e3e7ee;
+  --color-ink-600: #d5dae3;
+
+  --color-line: #d8dee7;
+  --color-line-soft: #e7ebf1;
+
+  --color-fog-50: #0a0c11;
+  --color-fog-100: #161a22;
+  --color-fog-200: #2a313c;
+  --color-fog-300: #414a58;
+  --color-fog-400: #5b6472;
+  --color-fog-500: #5f6772;
+  --color-fog-600: #6a6f76;
+
+  --color-signal-200: #075985;
+  --color-signal-300: #38bdf8;
+  --color-signal-400: #0369a1;
+  --color-signal-500: #0284c7;
+  --color-signal-600: #075985;
+
+  --color-brand-whatsapp: #1da851;
+  --color-brand-whatsapp-dark: #157f3d;
+
+  --overlay-surface: rgba(10, 12, 17, 0.035);
+  --overlay-hover: rgba(10, 12, 17, 0.055);
+  --overlay-border: rgba(10, 12, 17, 0.14);
+  --on-hero: #0a0c11;
+  --scene-scrim: rgba(250, 251, 252, 0.86);
+
+  /* 5.49:1 and up on --color-ink-950. The surface darkens on hover rather than
+     lightening, because lightening would walk it back toward the unreadable end
+     of the ramp. */
+  --color-accent-text: #0369a1;
+  --color-accent-text-hover: #075985;
+  --color-accent-surface: #0369a1;
+  --color-accent-surface-hover: #075985;
+  --color-accent-surface-active: #0c4a6e;
+  --color-on-accent: #f5f6f8;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: var(--color-line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    background-color: var(--color-ink-950);
+    color: var(--color-fog-50);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-signal-400);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-signal-400) 28%, transparent);
+    color: var(--on-hero);
+  }
+
+  /* Theme switch animation.
+     `theme-switching` is added to <html> for the length of the change and
+     removed again, so this never competes with the hover and focus transitions
+     components already declare. */
+  :root.theme-switching:not([data-motion='reduce']) *,
+  :root.theme-switching:not([data-motion='reduce']) *::before,
+  :root.theme-switching:not([data-motion='reduce']) *::after {
+    transition:
+      background-color 300ms var(--ease-out-expo),
+      border-color 300ms var(--ease-out-expo),
+      color 300ms var(--ease-out-expo),
+      fill 300ms var(--ease-out-expo),
+      stroke 300ms var(--ease-out-expo),
+      box-shadow 300ms var(--ease-out-expo) !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-page {
+    width: 100%;
+    margin-inline: auto;
+    max-width: 80rem;
+    padding-inline: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .container-page {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /**
+   * The hero is the one place allowed to exceed the text measure.
+   *
+   * The staircase is the argument the page is making above the fold, and it gets
+   * measurably more presence in a wider column — the camera refits to the
+   * container, so every extra pixel of width is a closer camera and a larger
+   * robot. The copy column keeps its own max-width, so the measure does not
+   * stretch and the line length stays readable. Nothing else on the site uses
+   * this.
+   */
+  .container-hero {
+    width: 100%;
+    margin-inline: auto;
+    max-width: 92rem;
+    padding-inline: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .container-hero {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .container-hero {
+      padding-inline: 3.5rem;
+    }
+  }
+
+  /**
+   * The hero fills the first screen, and the scene column is sized against the
+   * viewport rather than against the copy beside it, so the staircase is tall
+   * enough to be the thing you look at first.
+   *
+   * It is a min-height, not a fixed one: a long headline, a large font size or a
+   * user zoomed to 200% all make the section grow instead of clipping it. Below
+   * `lg` the two columns stack, so the height is left to the content and the
+   * scene is capped by its own aspect ratio instead.
+   */
+  .hero-shell {
+    min-height: 90vh;
+    min-height: 90svh;
+  }
+
+  @media (min-width: 1280px) {
+    .hero-shell {
+      min-height: 100vh;
+      min-height: 100svh;
+    }
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-signal-400);
+  }
+
+  /* Plain card: one flat surface, one hairline border, no glow. */
+  .surface-card {
+    background-color: var(--color-ink-900);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+  }
+
+  /* A translucent panel that works against either background. */
+  .surface-glass {
+    background-color: var(--overlay-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+  }
+
+  /* Quiet interactive affordance: a hover wash that reads on light and dark. */
+  .hover-surface {
+    transition: background-color 200ms ease;
+  }
+
+  .hover-surface:hover {
+    background-color: var(--overlay-hover);
+  }
+
+  /* The accent in its text role, and as a filled surface. See the token comment
+     in @theme for why these are separate from the cyan ramp. */
+  .text-accent {
+    color: var(--color-accent-text);
+  }
+
+  .text-accent:hover {
+    color: var(--color-accent-text-hover);
+  }
+
+  /* For links that keep a neutral resting colour and only take the accent on
+     hover, which is the quieter of the two treatments. */
+  .text-accent-hover:hover {
+    color: var(--color-accent-text-hover);
+  }
+
+  .surface-accent {
+    background-color: var(--color-accent-surface);
+    color: var(--color-on-accent);
+  }
+
+  .surface-accent:hover {
+    background-color: var(--color-accent-surface-hover);
+  }
+
+  .surface-accent:active {
+    background-color: var(--color-accent-surface-active);
+  }
+
+  .hairline-grid {
+    background-image:
+      linear-gradient(to right, color-mix(in oklab, var(--color-fog-50) 3%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--color-fog-50) 3%, transparent) 1px, transparent 1px);
+    background-size: 72px 72px;
+  }
+
+  /* ---------------------------------------------------------------------
+     TYPOGRAPHIC SCALE
+     One controlled ramp — Display, H1, H2, H3, Body, Supporting.
+
+     Headings grow with the viewport, not by arbitrary jumps, so a page
+     cannot accidentally introduce a louder style than the one above it.
+
+     Headings carry 700 and body copy 600. Hierarchy comes from size and
+     colour rather than from weight alone, so secondary text is never
+     rendered light enough to be hard to read. The approved hero is exempt
+     and keeps its own sizes and weights.
+     --------------------------------------------------------------------- */
+
+  .type-display {
+    font-size: clamp(2.5rem, 1.5rem + 3.9vw, 3.875rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+  }
+
+  .type-h2 {
+    font-size: clamp(1.625rem, 1.2rem + 1.65vw, 2.25rem);
+    line-height: 1.18;
+    letter-spacing: -0.025em;
+    font-weight: 700;
+  }
+
+  .type-h3 {
+    font-size: clamp(1.1875rem, 1.06rem + 0.5vw, 1.4375rem);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    font-weight: 700;
+  }
+
+  .type-body {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    font-weight: 600;
+  }
+
+  .type-support {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    font-weight: 600;
+  }
+
+  /* A single line-length limit, so long-form copy stays readable. */
+  .measure {
+    max-width: 40rem;
+  }
+
+  .measure-tight {
+    max-width: 34rem;
+  }
+
+  /* The mono index that prefixes a numbered section or row. */
+  .index-mark {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--color-signal-400);
+  }
+
+  /* A hairline used to separate editorial rows without a card. */
+  .rule-top {
+    border-top: 1px solid var(--color-line);
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background-image: linear-gradient(
+      120deg,
+      var(--color-fog-50) 0%,
+      var(--color-fog-50) 40%,
+      var(--color-signal-300) 78%,
+      var(--color-signal-400) 100%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .mask-fade-b {
+    mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
+  }
+
+  /* The hairline grid is site furniture - it gives the copy column a sense of a
+     ruled surface - but the 3D scene does not want it. A grid running at the same
+     strength behind both reads as a compositing artefact rather than as two
+     different things at two different depths, and the brief is right that it should
+     not survive into the scene.
+
+     Two masks, and they have to be intersected rather than added. The default
+     composite is `add`, which would union the two fades and leave the grid fully
+     visible wherever either one is opaque - that is a mask that does nothing. So
+     this fades the grid down into the left column and away entirely by the time it
+     reaches the scene, and the two fade axes compose into one. */
+  .mask-fade-b-scene {
+    mask-image:
+      linear-gradient(to bottom, #000 45%, transparent 100%),
+      linear-gradient(to right, #000 34%, transparent 76%);
+    -webkit-mask-image:
+      linear-gradient(to bottom, #000 45%, transparent 100%),
+      linear-gradient(to right, #000 34%, transparent 76%);
+    mask-composite: intersect;
+    -webkit-mask-composite: source-in;
+  }
+}
+
+/* =====================================================================
+   Hero data-transfer network
+   =====================================================================
+
+   The brand is Solvionix, and this is the visual that says so: real data
+   arriving from three channels, being processed at the company core, and
+   leaving as the five real services.
+
+   The part that matters is the packet. Most attempts at this read as a line
+   with a light running along it, which is a loading bar. A packet is a
+   discrete element travelling an actual path, with a lit segment behind it
+   that is the same length every time, so the eye can count them. So each
+   route here is three separate things — an inert run, a faint carrier, and
+   the transfers themselves — and the transfers are moved along the route's
+   own path data with `offset-path`, never with a dash trick.
+
+   Every colour below is a mix over tokens that already flip with the theme, so
+   there is no light/dark pair to keep in sync and nothing to hardcode. The two
+   that need a little care are the name's shadow and the label ink, which are
+   tuned for the palette they end up on.
+
+   The whole thing is transform, stroke offset and offset-distance only. There
+   is not one animated layout property, no per-frame React state, no
+   `setInterval`, and no dependency on WebGL, so the network renders
+   identically on a machine with no GPU and on one with the hardware turned off
+   in the OS. */
+
+@layer components {
+  .flow-stage {
+    /*
+      Owns the aspect ratio for the entire composition. The SVG, the HTML labels
+      and the name are all positioned as percentages of the frame it establishes,
+      which is the only reason they stay locked to the geometry they are anchored
+      to. Capped against viewport height so a tall drawing cannot push the fold
+      down on a short screen.
+    */
+    --flow-ar: 1.3158;
+    --px: 0;
+    --py: 0;
+
+    --flow-line: color-mix(in oklab, var(--color-fog-500) 26%, transparent);
+    --flow-carrier: color-mix(in oklab, var(--color-signal-400) 40%, transparent);
+    --flow-pad: color-mix(in oklab, var(--color-signal-400) 55%, transparent);
+    --flow-ring: color-mix(in oklab, var(--color-fog-500) 24%, transparent);
+    --flow-ring-strong: color-mix(in oklab, var(--color-fog-400) 30%, transparent);
+    --flow-label: var(--color-fog-200);
+    --flow-label-accent: var(--color-signal-400);
+    --flow-frag: color-mix(in oklab, var(--color-fog-400) 46%, transparent);
+
+    /* The wake is the brightest thing on a route, so the carrier underneath it
+       has to stay a whole tier below. */
+    --flow-wake: color-mix(in oklab, var(--color-signal-300) 92%, transparent);
+    --flow-pkt-in: color-mix(in oklab, var(--color-signal-200) 70%, var(--color-signal-300));
+    --flow-pkt-out: var(--color-signal-300);
+
+    /*
+      One shadow token serves both palettes. Fog-50 is near-white in dark and
+      near-black in light, so the same declaration reads as a soft glow behind the
+      name on a dark stage and as a soft lift on a light one.
+    */
+    --flow-name-shadow: 0 2px 26px color-mix(in oklab, var(--color-fog-50) 15%, transparent);
+    --flow-name-lit:
+      0 2px 26px color-mix(in oklab, var(--color-fog-50) 15%, transparent),
+      0 0 20px color-mix(in oklab, var(--color-signal-300) 42%, transparent);
+
+    container-type: inline-size;
+    width: min(100%, calc(74vh * var(--flow-ar)));
+    margin-inline: auto;
+  }
+
+  .flow-frame {
+    position: relative;
+    aspect-ratio: var(--flow-ar);
+    width: 100%;
+  }
+
+  .flow-halo {
+    position: absolute;
+    width: 62%;
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(
+      circle,
+      color-mix(in oklab, var(--color-signal-500) 13%, transparent) 0%,
+      color-mix(in oklab, var(--color-signal-500) 5%, transparent) 42%,
+      transparent 70%
+    );
+    animation: flow-halo-in 1400ms ease-out both;
+  }
+
+  .flow-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ---- Routes --------------------------------------------------------- */
+
+  .route-base {
+    fill: none;
+    stroke: var(--flow-line);
+    stroke-width: 1;
+    stroke-linecap: round;
+    /*
+      `pathLength={1}` on the element normalises every route to a length of one,
+      so this draws in with a dash of 1 and an offset of 1 regardless of whether
+      the path is a 60-unit stub or a 400-unit run. No getTotalLength, no
+      measurement on load.
+    */
+    stroke-dasharray: 1;
+    animation: flow-draw 900ms cubic-bezier(0.32, 0, 0.24, 1) var(--draw-delay) both;
+  }
+
+  /*
+    A very faint dash running continuously underneath. It says the line is a
+    conduit rather than decoration, and it is kept a full tier below the wake so
+    that what travels on the route is never ambiguous.
+  */
+  .route-carrier {
+    fill: none;
+    stroke: var(--flow-carrier);
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    stroke-dasharray: 0.006 0.02;
+    opacity: 0.42;
+    animation:
+      flow-carrier var(--carrier-dur) linear infinite,
+      flow-carrier-in 700ms linear calc(var(--draw-delay) + 200ms) both;
+  }
+
+  /* ---- Packets --------------------------------------------------------- */
+
+  /*
+    The lit segment behind the head. `pathLength={1}` means the dash maths is the
+    same on every route, and the offset runs from one wake-length to one
+    wake-length less than a full path — so the segment slides forward by exactly
+    the whole route each cycle and the loop is seamless.
+  */
+  .pkt-wake {
+    fill: none;
+    stroke: var(--flow-wake);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: var(--pkt-wake) calc(1 - var(--pkt-wake));
+    animation: flow-pkt-wake var(--pkt-dur) linear infinite var(--pkt-delay);
+  }
+
+  /*
+    The packet itself. `offset-path` is set inline from the route's own path data;
+    all this adds is the motion and the rotation lock. `offset-rotate: 0deg` is
+    explicit because the default rotates the element to follow the tangent, and
+    for a radially-filled circle that rotation is invisible work the compositor
+    does thirteen times a second for nothing.
+  */
+  .pkt-head {
+    offset-rotate: 0deg;
+    animation: flow-pkt var(--pkt-dur) linear infinite var(--pkt-delay);
+  }
+
+  /* ---- Idle runs and pads ---------------------------------------------- */
+
+  .idle-base {
+    fill: none;
+    stroke: var(--flow-line);
+    stroke-width: 1;
+    stroke-linecap: round;
+    opacity: 0.55;
+  }
+
+  .idle-pad {
+    fill: none;
+    stroke: var(--flow-pad);
+    stroke-width: 1;
+    opacity: 0.5;
+  }
+
+  .pad--in {
+    fill: var(--flow-pad);
+  }
+
+  /* Hollow and square where a run delivers: pads on a board, not dots on a
+     diagram. Same marks everywhere is what makes a diagram look like a diagram. */
+  .pad--out {
+    fill: none;
+    stroke: var(--flow-pad);
+    stroke-width: 1;
+    opacity: 0.8;
+  }
+
+  /* ---- Core ------------------------------------------------------------ */
+
+  .core-layer {
+    animation: flow-parallax-core 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .core {
+    animation: flow-core-in 1100ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both;
+  }
+
+  .core-spin {
+    animation: flow-spin 96s linear infinite;
+    animation-delay: 1.6s;
+  }
+
+  .core-ring-outer {
+    fill: none;
+    stroke: var(--flow-ring);
+    stroke-width: 1;
+    stroke-dasharray: 0.004 0.0132;
+    opacity: 0.85;
+  }
+
+  .core-ring {
+    fill: none;
+    stroke: var(--flow-ring-strong);
+    stroke-width: 1;
+    opacity: 0.6;
+  }
+
+  .core-ring-inner {
+    fill: none;
+    stroke: var(--flow-ring);
+    stroke-width: 1;
+    stroke-dasharray: 2 7;
+    opacity: 0.5;
+  }
+
+  .core-tick {
+    stroke: var(--flow-ring);
+    stroke-width: 1;
+    opacity: 0.45;
+  }
+
+  .core-tick--major {
+    stroke: var(--flow-ring-strong);
+    opacity: 0.8;
+  }
+
+  .core-pip {
+    fill: var(--flow-pad);
+  }
+
+  /* ---- Processing pulse -------------------------------------------------- */
+
+  .pulse-ring {
+    fill: none;
+    stroke: var(--color-signal-400);
+    stroke-width: 1.4;
+  }
+
+  .pulse-ring--near {
+    opacity: 1;
+  }
+
+  .pulse-ring--mid {
+    opacity: 0.7;
+  }
+
+  .pulse-ring--far {
+    opacity: 0.45;
+  }
+
+  .pulse {
+    animation: flow-pulse var(--beat-period) cubic-bezier(0.16, 1, 0.3, 1) infinite var(--beat-delay);
+  }
+
+  /* ---- Data fragments ----------------------------------------------------- */
+
+  .flow-fragments {
+    position: absolute;
+    inset: 0;
+    animation: flow-parallax-far 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .flow-frag {
+    position: absolute;
+    translate: -50% -50%;
+    font-family: var(--font-mono);
+    font-size: clamp(0.5rem, 0.5cqw + 0.36rem, 0.62rem);
+    letter-spacing: 0.16em;
+    color: var(--flow-frag);
+    animation: flow-frag var(--frag-cycle) ease-in-out infinite var(--frag-delay);
+  }
+
+  /* ---- Node labels -------------------------------------------------------- */
+
+  .flow-nodes {
+    position: absolute;
+    inset: 0;
+    animation: flow-parallax-mid 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .dnd {
+    position: absolute;
+  }
+
+  /*
+    The outer element owns the placement offset and nothing else. Two transforms on
+    one element means the later one silently replaces the earlier, so the entrance
+    lives on a child and the two never meet.
+  */
+  .dnd--above-center {
+    transform: translate(-50%, calc(-100% - 14px));
+    --label-dx: 0px;
+    --label-dy: 7px;
+  }
+
+  .dnd--above-right {
+    transform: translate(10px, calc(-100% - 12px));
+    --label-dx: -12px;
+    --label-dy: 6px;
+  }
+
+  .dnd--below-center {
+    transform: translate(-50%, 14px);
+    --label-dx: 0px;
+    --label-dy: -7px;
+  }
+
+  .dnd--below-right {
+    transform: translate(10px, 12px);
+    --label-dx: -12px;
+    --label-dy: -6px;
+  }
+
+  .dnd--right {
+    transform: translate(20px, -50%);
+    --label-dx: -12px;
+    --label-dy: 0px;
+    max-width: 27%;
+  }
+
+  .dnd--left {
+    transform: translate(calc(-100% - 20px), -50%);
+    --label-dx: 12px;
+    --label-dy: 0px;
+    max-width: 34%;
+  }
+
+  .dnd-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    animation: flow-label-in 700ms cubic-bezier(0.16, 1, 0.3, 1) var(--label-delay) both;
+  }
+
+  /* A hollow pip rather than a filled dot, to match the pads on the drawing. It
+     fills and swells on arrival and empties again. */
+  .dnd-pip {
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border: 1px solid var(--flow-pad);
+    border-radius: 50%;
+    animation: flow-node-beat var(--beat-period) ease-out infinite var(--beat-delay);
+  }
+
+  .dnd-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+
+  .dnd-meta {
+    font-family: var(--font-mono);
+    font-size: clamp(0.55rem, 0.6cqw + 0.44rem, 0.68rem);
+    line-height: 1;
+    letter-spacing: 0.16em;
+    color: var(--flow-label-accent);
+  }
+
+  /*
+    Sized in cqw rather than px so the labels track the drawing as it scales. Set in
+    px they would be 11px on a phone and 19px on a 2xl display from the same rule,
+    which is the single most common way a scaled-down hero falls apart.
+
+    The floor is 12px, not for tidiness. A 10.7px service name is not a small
+    detail, it is unreadable on a phone held at arm's length, and the brief is
+    explicit that these labels stay readable.
+  */
+  .dnd-name {
+    font-family: var(--font-sans);
+    font-size: clamp(0.75rem, 0.85cqw + 0.58rem, 1.05rem);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--flow-label);
+    text-wrap: balance;
+  }
+
+  /* ---- The name ---------------------------------------------------------- */
+
+  .flow-brand {
+    position: absolute;
+    translate: -50% -50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    width: max-content;
+    max-width: 70%;
+    text-align: center;
+    animation: flow-parallax-core 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /*
+    No opacity gate, and no entrance delay. The name is legible in the first
+    painted frame and only ever resolves: a blur and a few pixels of letter-spacing
+    easing off. Everything else in this visual is allowed to arrive late, and the
+    reveal is sequenced around a name that is already there.
+
+    Sized against the inner ring, not against the frame. The name has to sit inside
+    a fixed viewBox, so if it outgrows the ring it does not reflow or clip — it
+    simply draws across the graduation marks and stops reading as the centre of
+    anything. Measured, the wordmark runs about 6x its own font size, and the ring
+    is 27.6% of the wide frame, so the coefficient below leaves it at 85% of the
+    ring at every width. The floor is what governs a 390px screen, which is why the
+    compact ring is sized against it rather than against the compact frame.
+  */
+  .flow-name {
+    font-family: var(--font-display);
+    font-size: clamp(1.06rem, 3.9cqw, 2.85rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.015em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--color-fog-50);
+    text-shadow: var(--flow-name-shadow);
+    /*
+      Two animations, and they are on different properties on purpose. The entrance
+      owns opacity, filter and tracking for 900ms; the reaction owns the shadow for
+      as long as the page is open. Sharing an element is fine — sharing a property
+      is not, because the second animation would simply win.
+    */
+    animation:
+      flow-name-in 900ms cubic-bezier(0.16, 1, 0.3, 1) both,
+      flow-name-react var(--beat-period) cubic-bezier(0.16, 1, 0.3, 1) infinite var(--beat-delay);
+  }
+
+  /*
+    The rule under the name is the other half of the reaction. It is the only part
+    of the wordmark that changes width, so the processing beat registers on the
+    name even when the glow is too subtle to notice.
+  */
+  .flow-rule {
+    width: 2.25rem;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--color-signal-300), transparent);
+    animation: flow-rule-react var(--beat-period) cubic-bezier(0.16, 1, 0.3, 1) infinite var(--beat-delay);
+  }
+
+  .flow-positioning {
+    font-family: var(--font-mono);
+    font-size: clamp(0.5rem, 0.5cqw + 0.4rem, 0.66rem);
+    line-height: 1.3;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--flow-label) 72%, transparent);
+    animation: flow-position-in 900ms cubic-bezier(0.16, 1, 0.3, 1) 220ms both;
+  }
+
+  /* ---- Movement ---------------------------------------------------------- */
+
+  .flow-far,
+  .flow-near {
+    animation: flow-parallax-far 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .flow-near {
+    animation-name: flow-parallax-mid;
+  }
+
+  .flow-stage .flow-far,
+  .flow-stage .flow-near,
+  .flow-stage .flow-fragments,
+  .flow-stage .flow-nodes,
+  .flow-stage .core-layer,
+  .flow-stage .flow-brand {
+    will-change: transform;
+  }
+}
+
+/*
+  Keyframes sit outside the layer so they resolve regardless of how the cascade
+  orders the components layer.
+*/
+
+/* `pathLength={1}` normalises the route, so an offset of 1 is the whole line
+   whatever its real length. */
+@keyframes flow-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Shifting by exactly one period of the dash pattern is what makes the loop
+   seamless: at the end of a cycle the pattern is back where it started. */
+@keyframes flow-carrier {
+  to {
+    stroke-dashoffset: -0.026;
+  }
+}
+
+@keyframes flow-carrier-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.42;
+  }
+}
+
+/*
+  The wake. The dash starts one wake-length ahead of the head's position and ends
+  one full route behind it, which puts the lit segment immediately behind the head
+  for the whole journey — and lands back on the same value at the end of the cycle
+  so it loops without a seam.
+*/
+@keyframes flow-pkt-wake {
+  from {
+    stroke-dashoffset: var(--pkt-wake);
+  }
+  to {
+    stroke-dashoffset: calc(var(--pkt-wake) - 1);
+  }
+}
+
+@keyframes flow-pkt {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+
+@keyframes flow-pulse {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.82);
+  }
+  40% {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes flow-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes flow-core-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes flow-name-in {
+  from {
+    opacity: 0.35;
+    filter: blur(7px);
+    letter-spacing: 0.09em;
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    letter-spacing: 0.015em;
+  }
+}
+
+/*
+  The name's reaction to the core processing. Keyed to the arrival rather than to
+  the cycle: the delay comes from a real route, so this brightens when something
+  lands, and the same numbers put the pulse ring in the same frame.
+*/
+@keyframes flow-name-react {
+  0% {
+    text-shadow: var(--flow-name-lit);
+  }
+  34% {
+    text-shadow: var(--flow-name-shadow);
+  }
+  100% {
+    text-shadow: var(--flow-name-shadow);
+  }
+}
+
+@keyframes flow-rule-react {
+  0% {
+    transform: scaleX(1.9);
+    opacity: 1;
+  }
+  40% {
+    transform: scaleX(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0.7;
+  }
+}
+
+/* The positioning line gets its own keyframes rather than reusing the name's: the
+   name eases its letter-spacing, and applying that to a 0.2em-tracked mono label
+   would visibly reflow it. */
+@keyframes flow-position-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes flow-label-in {
+  from {
+    opacity: 0;
+    transform: translate(var(--label-dx, 0px), var(--label-dy, 0px));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes flow-node-beat {
+  0% {
+    transform: scale(1.75);
+    background: var(--color-signal-300);
+    border-color: var(--color-signal-300);
+  }
+  45% {
+    transform: scale(1);
+    background: transparent;
+    border-color: var(--flow-pad);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes flow-frag {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  22% {
+    opacity: 0.85;
+  }
+  70% {
+    opacity: 0;
+  }
+}
+
+@keyframes flow-halo-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/*
+  Three depth bands. The spread is deliberately tiny — eleven pixels at the far end
+  against a drawing nearly a thousand units wide. Anything more and it stops being
+  depth and starts being a tilt toy, and the labels start to detach from the routes
+  they are supposed to be attached to.
+
+  The same transform appears in both keyframes on purpose. The reveal is the
+  opacity, and the transform is held in the `to` state so that it keeps resolving
+  `--px` for as long as the pointer moves.
+*/
+@keyframes flow-parallax-far {
+  from {
+    opacity: 0;
+    transform: translate3d(calc(var(--px) * -4px), calc(var(--py) * -4px), 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(calc(var(--px) * -4px), calc(var(--py) * -4px), 0);
+  }
+}
+
+@keyframes flow-parallax-mid {
+  from {
+    opacity: 0;
+    transform: translate3d(calc(var(--px) * -7px), calc(var(--py) * -7px), 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(calc(var(--px) * -7px), calc(var(--py) * -7px), 0);
+  }
+}
+
+@keyframes flow-parallax-core {
+  from {
+    opacity: 0;
+    transform: translate3d(calc(var(--px) * -11px), calc(var(--py) * -11px), 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(calc(var(--px) * -11px), calc(var(--py) * -11px), 0);
+  }
+}
+
+/* =====================================================================
+   Reduced motion
+   =====================================================================
+
+   The network stays. The travel stops.
+
+   Routes are left fully drawn and the carrier is held as a static dashed stroke,
+   so the drawing still reads as a live system rather than as a plain diagram.
+   Packets are not hidden — each one is parked at a fixed point on its route with
+   its wake still lit behind it, because removing the travelling element entirely
+   would leave a set of pipes with nothing in them and lose the only thing this
+   visual is about. Nothing moves and no element is ever mid-transition.
+
+   The pointer parallax is not merely disabled, it is unwritten: the hook returns
+   early on a coarse or reduced-motion pointer, so the custom properties are never
+   set and the transforms resolve to their own origin. */
+[data-motion='reduced'] .flow-far,
+[data-motion='reduced'] .flow-near,
+[data-motion='reduced'] .flow-fragments,
+[data-motion='reduced'] .flow-nodes,
+[data-motion='reduced'] .core-layer,
+[data-motion='reduced'] .flow-brand,
+[data-motion='reduced'] .core-spin,
+[data-motion='reduced'] .core,
+[data-motion='reduced'] .flow-halo,
+[data-motion='reduced'] .flow-name,
+[data-motion='reduced'] .flow-rule,
+[data-motion='reduced'] .flow-positioning,
+[data-motion='reduced'] .dnd-inner,
+[data-motion='reduced'] .route-base {
+  animation: none;
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+[data-motion='reduced'] .route-carrier {
+  animation: none;
+  opacity: 0.34;
+}
+
+[data-motion='reduced'] .pkt-head {
+  animation: none;
+  offset-distance: var(--pkt-rest);
+}
+
+[data-motion='reduced'] .pkt-wake {
+  animation: none;
+  stroke-dashoffset: var(--pkt-rest-wake);
+}
+
+[data-motion='reduced'] .pulse,
+[data-motion='reduced'] .dnd-pip,
+[data-motion='reduced'] .flow-frag {
+  animation: none;
+}
+
+[data-motion='reduced'] .flow-frag {
+  opacity: 0.28;
+}
+
+/* =====================================================================
+   Elite Tech UI / UX Design System Classes
+   ===================================================================== */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.025em;
+}
+
+.glass-card {
+  background: rgba(11, 13, 19, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  background: rgba(14, 17, 24, 0.88);
+  border-color: rgba(56, 189, 248, 0.35);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6), 0 0 25px rgba(56, 189, 248, 0.15);
+  transform: translateY(-2px);
+}
+
+.blueprint-grid {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+}
+
+.mesh-radial-glow {
+  background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.15) 0%, rgba(14, 165, 233, 0.05) 45%, transparent 70%);
+}
+

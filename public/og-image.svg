@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#080a0f" />
+      <stop offset="100%" stop-color="#05060a" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.08" />
+    </linearGradient>
+    <radialGradient id="bloom" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.24" />
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0" />
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1" />
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <rect width="1200" height="630" fill="url(#grid)" />
+  <ellipse cx="880" cy="200" rx="440" ry="330" fill="url(#bloom)" />
+
+  <g fill="none" stroke="url(#accent)" stroke-width="1.25">
+    <circle cx="880" cy="300" r="110" />
+    <circle cx="880" cy="300" r="168" stroke-dasharray="4 9" />
+    <circle cx="880" cy="300" r="226" />
+    <path d="M 654 300 L 1106 300" />
+    <path d="M 880 74 L 880 526" />
+  </g>
+  <circle cx="880" cy="300" r="9" fill="#7dd3fc" />
+  <circle cx="880" cy="132" r="6" fill="#38bdf8" fill-opacity="0.8" />
+  <circle cx="1034" cy="412" r="5" fill="#38bdf8" fill-opacity="0.6" />
+  <circle cx="726" cy="412" r="5" fill="#38bdf8" fill-opacity="0.6" />
+
+  <g>
+    <rect x="80" y="118" width="52" height="52" rx="12" fill="#0b0d13" stroke="#1f242f" stroke-width="1.5" />
+    <path d="M 97 134 L 107 144 L 97 154" fill="none" stroke="#38bdf8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="115" cy="138" r="3.2" fill="#7dd3fc" />
+    <text x="150" y="153" font-family="Inter Variable, Inter, system-ui, sans-serif" font-size="25" font-weight="600" letter-spacing="4.2" fill="#f4f6f8">SOLVIONIX</text>
+  </g>
+
+  <text x="80" y="300" font-family="Inter Variable, Inter, system-ui, sans-serif" font-size="72" font-weight="600" letter-spacing="-2.4" fill="#f4f6f8">Turning Business Problems</text>
+  <text x="80" y="380" font-family="Inter Variable, Inter, system-ui, sans-serif" font-size="72" font-weight="600" letter-spacing="-2.4" fill="#7dd3fc">Into Technology Solutions.</text>
+
+  <text x="80" y="452" font-family="Inter Variable, Inter, system-ui, sans-serif" font-size="25" fill="#98a1ae">AI  ·  Software Development  ·  Business Automation  ·  Data &amp; Analytics</text>
+
+  <text x="80" y="546" font-family="JetBrains Mono Variable, ui-monospace, monospace" font-size="17" letter-spacing="2.6" fill="#38bdf8">AI, SOFTWARE &amp; BUSINESS SOLUTIONS</text>
+  <text x="80" y="578" font-family="JetBrains Mono Variable, ui-monospace, monospace" font-size="17" letter-spacing="1.4" fill="#5d6470">SOLVE.  INNOVATE.  EVOLVE.</text>
+</svg>
